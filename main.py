@@ -11,7 +11,7 @@ def read_file(filename, encoding="utf-8"):
 
 def test_algorithms(text, start_pattern, middle_pattern, end_pattern, fake_pattern):
     algorithms = {
-        # "KMP": kmp_search,
+        "KMP": kmp_search,
         "Boyer-Moore": boyer_moore_search,
         "Rabin-Karp": rabin_karp_search,
     }
@@ -29,9 +29,12 @@ def test_algorithms(text, start_pattern, middle_pattern, end_pattern, fake_patte
         results[pattern_type] = {}
 
         for name, algorithm in algorithms.items():
-            print(f"Testing {name} with {pattern_type} pattern...")
-            execution_time = timeit.timeit(lambda: algorithm(text, pattern))
-
+            print(
+                f"Searching substring '{pattern}' with {name} at the position: {pattern_type}"
+            )
+            execution_time = timeit.timeit(
+                lambda: algorithm(text, pattern), number=1000
+            )
             results[pattern_type][name] = execution_time
 
     return results
@@ -52,24 +55,22 @@ def print_results(article_name, results):
 
 
 def main():
-    print("Start analyzing...")
-    # article_1 = read_file("texts/article1.txt", "cp1251")
-    # print(article_1)
+    article_1 = read_file("texts/article1.txt", "cp1251")
     article_2 = read_file("texts/article2.txt")
-    #
-    # results_1 = test_algorithms(
-    #     article_1, "Вінницький", "запускаємо", "Вікіпедія", "кітпес"
-    # )
+
+    results_1 = test_algorithms(
+        article_1, "Вінницький", "запускаємо", "Вікіпедія", "кітпес"
+    )
 
     results_2 = test_algorithms(
         article_2,
         "Центральноукраїнський",
         "збалансованим",
         "implementation",
-        "вигаданий_підрядок",
+        "бонжур",
     )
 
-    # print_results("Article 1", results_1)
+    print_results("Article 1", results_1)
     print_results("Article 2", results_2)
 
 
